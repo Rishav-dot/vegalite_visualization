@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    const spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "vconcat": [
+    {
+      "hconcat": [
+        {
+          "title": "Sales by Rep",
+          "data": {"url": "https://raw.githubusercontent.com/Rishav-dot/dv_assignment_3/refs/heads/main/SalesOrders.csv"},
+          "mark": {"type": "arc", "innerRadius": 50},
+          "encoding": {
+            "theta": {"field": "Total", "type": "quantitative", "aggregate": "sum"},
+            "color": {"field": "Rep", "type": "nominal"},
+            "tooltip": [
+              {"field": "Rep", "type": "nominal"},
+              {"field": "Total", "type": "quantitative", "aggregate": "sum"}
+            ]
+          },
+          "width": 300,
+          "height": 300
+        },
+        {
+          "title": "Units vs Unit Cost",
+          "data": {"url": "https://raw.githubusercontent.com/Rishav-dot/dv_assignment_3/refs/heads/main/SalesOrders.csv"},
+          "mark": "point",
+          "encoding": {
+            "x": {"field": "Units", "type": "quantitative"},
+            "y": {"field": "Unit Cost", "type": "quantitative"},
+            "color": {"field": "Item", "type": "nominal"},
+            "tooltip": [
+              {"field": "Item", "type": "nominal"},
+              {"field": "Units", "type": "quantitative"},
+              {"field": "Unit Cost", "type": "quantitative"}
+            ]
+          },
+          "selection": {
+            "brush": {"type": "interval", "encodings": ["x", "y"]}
+          },
+          "width": 400
+        }
+      ]
+    },
+    {
+      "title": "Sales Trend by Item",
+      "data": {"url": "https://raw.githubusercontent.com/Rishav-dot/dv_assignment_3/refs/heads/main/SalesOrders.csv"},
+      "mark": "area",
+      "encoding": {
+        "x": {"field": "OrderDate", "type": "temporal", "timeUnit": "yearmonth"},
+        "y": {"field": "Total", "type": "quantitative", "aggregate": "sum"},
+        "color": {"field": "Item", "type": "nominal"},
+        "row": {"field": "Item", "type": "nominal", "sort": "descending"}
+      },
+      "width": 600,
+      "height": 50,
+      "resolve": {"scale": {"y": "independent"}}
+    },
+    {
+      "hconcat": [
+        {
+          "title": "Units Distribution",
+          "data": {"url": "https://raw.githubusercontent.com/Rishav-dot/dv_assignment_3/refs/heads/main/SalesOrders.csv"},
+          "layer": [
+            {
+              "mark": "bar",
+              "encoding": {
+                "x": {"field": "Units", "bin": true, "type": "quantitative"},
+                "y": {"aggregate": "count", "type": "quantitative"}
+              }
+            },
+            {
+              "mark": {"type": "rule", "color": "red"},
+              "encoding": {
+                "x": {"field": "Units", "aggregate": "mean", "type": "quantitative"}
+              }
+            }
+          ],
+          "width": 300
+        },
+        {
+          "title": "Regional Sales",
+          "data": {"url": "https://raw.githubusercontent.com/Rishav-dot/dv_assignment_3/refs/heads/main/SalesOrders.csv"},
+          "mark": "bar",
+          "encoding": {
+            "x": {"field": "Region", "type": "nominal"},
+            "y": {"field": "Total", "type": "quantitative", "aggregate": "sum"},
+            "color": {"field": "Region", "type": "nominal"}
+          },
+          "width": 300
+        }
+      ]
+    },
+    {
+      "title": "Item Profitability",
+      "data": {"url": "https://raw.githubusercontent.com/Rishav-dot/dv_assignment_3/refs/heads/main/SalesOrders.csv"},
+      "mark": "boxplot",
+      "encoding": {
+        "x": {"field": "Item", "type": "nominal"},
+        "y": {"field": "Total", "type": "quantitative"},
+        "color": {"field": "Item", "type": "nominal"}
+      },
+      "width": 500
+    }
+  ]
+}
+;
+    vegaEmbed('#vis', spec);
+  </script>
+</body>
+</html>
